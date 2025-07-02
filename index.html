@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Attendance</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="welcomePage" class="page slide-in">
+    <h2 class="fade-slide-in" style="color: #fff;">🎯 TARGET PLUS LIBRARY</h2>
+    <h4 class="fade-slide-in" style="color: #4d4747;">&nbsp;&nbsp;<img style="height: 15px;width: 20px;" src="lord-shiva.png" alt=""></a>MAHADEV BOYS HOSTEL</h4>
+    <button class="fade-slide-in" onclick="goToNextPage()">Next</button>
+  </div>
+
+  <div id="mainContainer" class="main-screen hidden">
+      <div class="video-background">
+        <video autoplay muted playsinline loop>
+         <source src="watermarked_preview (4).mp4" type="video/mp4">
+          Your browser does not support the video tag.
+    </video>
+  </div>
+    <!-- Include all subpages here -->
+      <div class="container" id="mainPage">
+      <h2 style="color: #fff;">📍 Smart Attendance</h2>
+      <input type="text" id="studentId" placeholder="Enter your ID">
+      <button onclick="showAttendancePage()">Mark Attendance</button>
+      <button style="background-color: hsl(192, 87%, 49%);" onclick="showHistorySection()">Show History</button>
+      <div id="submitMsg" class="status info">Please enter ID to proceed.</div>
+    </div>
+
+    <!-- Attendance Page -->
+    <div class="container hidden" id="attendancePage">
+      <h2 style="color: #fff;">📍 Smart Attendance</h2>
+      <div id="loading" class="status info" style="display: none;">⏳ Submitting attendance...</div>
+      <div id="msg" class="status info">Detecting location...</div>
+      <input type="text" id="idBox" placeholder="Enter your ID" disabled>
+      <button style="background-color: green" onclick="submitAttendance('IN')" disabled id="inBtn">📥 Check IN</button>
+      <button style="background-color: red" onclick="submitAttendance('OUT')" disabled id="outBtn">📤 Check OUT</button>
+      <button onclick="goBackToMain()">⬅️ Back</button>
+    </div>
+
+    <!-- History Section -->
+   <div class="container hidden" id="historySection">
+  <h2 style="color: #fff;">📋 Attendance History</h2>
+
+  <input type="text" id="historyIdBox" placeholder="Enter your ID">
+
+  <!-- 📅 Calendar Input with icon -->
+  <div class="date-wrapper">
+    <i class="fa-solid fa-calendar-days calendar-icon"></i>
+    <input type="date" id="dateInput" class="date-input">
+  </div>
+
+  <button onclick="filterByDate()">Show Attendance</button>
+  <button onclick="goBackToMain()">⬅️ Back</button>
+  <button style="background-color: hsl(192, 87%, 49%);" onclick="goToExtraPage()">📚 Library/PG Info</button>
+
+  <p id="latestDate" class="latest-date-info"> <span style="color:#1b7c94;"></span></p>
+  <div id="historyMsg" class="status info">Please wait... Data is still loading.</div>
+
+  <div class="table-responsive">
+    <table id="historyTable" style="display:none; background-color: #fff;">
+      <thead>
+        <tr>
+          <th>Name / Phone</th>
+          <th>Date / Time</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+  
+
+  <!-- Extra Page -->
+ <div id="extraPage" class="main-screen hidden">
+    <div class="container">
+      <h2 style="color: #fff;">📚 Library & PG Info</h2>
+      <div class="col"></div>
+      <div style="background: #ff009d;  margin-top: 5px; padding: 10px;box-shadow: 1px 1px 11px 4px rgba(187, 182, 182, 0.616); border-radius: 15px;" class="box">
+      <img style="height: 130px;width: 250px; margin-top: 5px;" src="pg.jpg" alt="Library Image">
+      <p style=" font-size: 15px;"><span style="color: #0edaf5e7;font-size: 21px; font-weight: 700;">Target Plus Library</span> offers a peaceful study environment with high-speed internet and clean facilities. <span style="color: #fbff00;  font-weight: 700;">Location</span> - 94A,Jivan Vihar Colony opposite Dr. Arora clinic LIC Colony, Road, Vaishali Nagar, Ajmer, Rajasthan 305001.</p>
+      </div>
+      <div style="background-color: #2193b0; margin-top: 10px; padding: 10px;box-shadow: 1px 1px 15px 5px rgba(99, 96, 96, 0.356); border-radius: 15px;" class="box1">
+      <img style="height: 130px;width: 250px;" src="WhatsApp Image 2025-06-17 at 09.52.30_317bf82d.jpg" alt="PG Image">
+      <p style=" font-size: 15px;"><span style="color: #ff009d; font-size: 21px;  font-weight: 700;">Mahadev Boys Hostel</span> provides comfortable and hygienic PG accommodations close to colleges. Power backup, water facility, and mess included.</p>
+      </div>
+      <button onclick="goBackToMain()">⬅️ Back</button>
+        <a href="https://api.whatsapp.com/send?phone=918302655926" target="_blank">
+      <button class="support-btn">💬 Support / Help</button></a>
+    </div>
+  </div>
+</div>
+ 
+<script src="script.js"></script>
+</body>
+</html>
