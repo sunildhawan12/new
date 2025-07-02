@@ -12,6 +12,9 @@ const studentMap = {
   "107": { name: "Aunj" },
   "109": { name: "Sajna" },
   "501": { name: "Sunil" },
+  "502": { name: "Ramniwas" },
+  "503": { name: "Ram" },
+  "504": { name: "Raman" },
 };
 
 let attendanceCache = {};
@@ -162,3 +165,100 @@ async function submitAttendance(status) {
   });
 }
 
+
+function showHistorySection() {
+  document.getElementById("mainPage").style.display = "none";
+  document.getElementById("attendancePage").style.display = "none";
+  document.getElementById("extraPage").style.display = "none";
+  document.getElementById("historySection").style.display = "block";
+}
+
+function goBackToMain() {
+  document.getElementById("historySection").style.display = "none";
+  document.getElementById("attendancePage").style.display = "none";
+  document.getElementById("extraPage").style.display = "none";
+  document.getElementById("mainPage").style.display = "block";
+}
+
+function goToExtraPage() {
+  document.getElementById("historySection").style.display = "none";
+  document.getElementById("mainPage").style.display = "none";
+  document.getElementById("extraPage").style.display = "block";
+}
+async function filterByDate() {
+  const id = document.getElementById("historyIdBox").value.trim();
+  const dateInput = document.getElementById("dateInput").value;
+  const msg = document.getElementById("historyMsg");
+  const latestDateElement = document.getElementById("latestDate");
+
+  if (!id) {
+    msg.textContent = "❌ Please enter your ID.";
+    msg.className = "status error";
+    return;
+  }
+
+  msg.textContent = "⏳ Loading attendance data...";
+  msg.className = "status info";
+
+  try {
+    const res = await fetch(`https://script.google.com/macros/s/AKfycbwYMb6IVNNSVO6E70ujDfO3x1x7G2sZX44X37MpTFiuBGysDNScXmsbZxuZUv-qJfXA/exec?id=${id}`);
+    allData = await res.json();
+
+    if (!allData || allData.length === 0) {
+      msg.textContent = "⚠️ No Records Found for this ID.";
+      document.getElementById("historyTable").style.display = "none";
+      return;
+    }
+
+    allData.sort((a, b) => {
+      const [d1, m1, y1] = a.date.split("/").map(Number);
+      const [d2, m2, y2] = b.date.split("/").map(Number);
+      return new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1);
+    });
+
+    let filtered = allData;
+
+    if (dateInput) {
+      const selectedDate = dateInput.split("-").reverse().join("/");
+      filtered = allData.filter(row => row.date === selectedDate);
+      msg.textContent = filtered.length > 0
+        ? `✅ ${filtered.length} Record(s) Found for ${selectedDate}.`
+        : "⚠️ No Records found for the selected date.";
+    } else {
+      msg.textContent = `✅ ${allData.length} Record(s) loaded.`;
+    }
+
+    const table = document.getElementById("historyTable");
+    const tbody = table.querySelector("tbody");
+    table.style.display = "table";
+    tbody.innerHTML = "";
+
+    const latestDate = filtered.length > 0 ? filtered[0].date : null;
+    const firstRow = allData[0];
+    latestDateElement.innerHTML = `🗓️ Latest Attendance Date: <span style="color: #ff009d">${firstRow.date}</span>`;
+    latestDateElement.style.display = "block";
+
+    filtered.forEach(row => {
+      const tr = document.createElement("tr");
+      if (row.date === latestDate) tr.classList.add("highlight");
+
+      const icon = row.status === "IN" ? "🟢" : "🔴";
+      tr.innerHTML = `
+        <td>${row.name}<br>${maskPhone(row.phone)}</td>
+        <td>${row.date}<br>${row.time}</td>
+        <td>${row.location.replace(",", "<br>")}</td>
+        <td>${icon} ${row.status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  } catch (err) {
+    msg.textContent = "❌ Error Loading data...";
+  }
+}
+
+// 📦 Add this helper function at the bottom or top:
+function maskPhone(phone) {
+  if (!phone || phone.length < 6) return "Hidden";
+  return phone.slice(0, 2) + "****" + phone.slice(-4);
+}
